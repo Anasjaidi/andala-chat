@@ -46,6 +46,69 @@ function App() {
       </Layout>
     </div>
   );
+	// const token = useSelector((state) => state.user.token);
+
+	// useEffect(() => {
+	// 	const fetchConvs = async () => {
+	// 		if (isLoggedIn) {
+	// 			/**
+	// 			 * get all conversations
+	// 			*/
+	// 			const data = await axios.get("/api/v1/conversation", {
+	// 				headers: {
+	// 					Authorization: `Bearer ${token}`,
+	// 				},
+	// 			});
+
+	// 			/**
+	// 			 * 
+	// 			 * add new conversation
+	// 			*/
+	// 			const newCnv = await axios.post("/api/v1/conversation", {}, {
+	// 				headers: {
+	// 					Authorization: `Bearer ${token}`,
+	// 				},
+	// 			});
+
+	// 			/**
+	// 			 * ask ai a question
+	// 			*/
+	// 			const response = await  axios.post(`/api/v1/conversation/${newCnv.data.data.uid}`, {
+	// 				content: "hello, chat gpt"
+	// 			}, {
+	// 				headers: {
+	// 					Authorization: `Bearer ${token}`,
+	// 				},
+	// 			});
+	// 			console.log(response.data);
+	// 		}
+	// 	};
+
+	// 	fetchConvs().then(() => {});
+	// }, []);
+
+	// return (
+	// 	<div className="w-screen h-screen bg-black/90">
+	// 		<Layout>
+	// 			{isLoggedIn && <Chat />}
+	// 			<Switch>
+	// 				<Route path="/" exact>
+	// 					<HomePage />
+	// 				</Route>
+
+	// 				{!isLoggedIn && (
+	// 					<Route path="/auth">
+	// 						<AuthPage />
+	// 					</Route>
+	// 				)}
+
+	// 				<Route path="*">
+	// 					<Redirect to="/" />
+	// 				</Route>
+	// 			</Switch>
+	// 		</Layout>
+	// 	</div>
+	// );
 }
 
 export default App;

@@ -24,8 +24,15 @@ export function SideBar(props) {
     }
   };
   const createNewConversation = async () => {
-    return await axios
-      .post("/api/v1/conversation")
+    return await axios.post(
+      "/api/v1/conversation",
+      {title : inputValue},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
   };
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -35,7 +42,7 @@ export function SideBar(props) {
   const submitConversationForm = () => {
     setInput(false);
     console.log(inputValue);
-    createNewConversation().then((res) => console.log(res)) 
+    createNewConversation().then((res) => console.log(res));
     setInputValue("");
   };
 
