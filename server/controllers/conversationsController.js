@@ -8,9 +8,13 @@ const openai = new OpenAIApi(
 );
 
 const saveNewConversation = async (req, res, next) => {
+
+	if (!req.body.title)
+		next(new AppError(409, "title is missing."))
+
 	const addedConversation =
 		await prismaConversationsClient.createNewConversation(req.user.uid, {
-			title: "new conversation",
+			title: req.body.title,
 		});
 
 	res.status(201).json({
