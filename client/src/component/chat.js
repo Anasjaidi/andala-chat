@@ -46,7 +46,6 @@ export default function Chat() {
   useEffect(() => {
     const fetchConvs = async () => {
       const token = localStorage.getItem("token");
-    //   console.log("from localstorage chat :", token);
       if (token) {
         await axios
           .get("/api/v1/conversation", {
