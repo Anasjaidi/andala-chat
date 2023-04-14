@@ -1,12 +1,19 @@
 import { useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
+import { userAction } from "../../store/userSlice";
+
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 import classes from "./AuthForm.module.css";
 import axios from "axios";
 
 const AuthForm = () => {
-  const isLogin = useSelector((state) => state.user.loggedIn);
+
+  const history = useHistory()
+  const isLogin_ = useSelector((state) => state.user.loggedIn);
+
+  const [isLogin, setIsLogin] = useState(true)
 
 
 
@@ -18,7 +25,7 @@ const AuthForm = () => {
   const lastNameRef = useRef();
 
   const switchAuthModeHandler = () => {
-    // setIsLogin((prevState) => !prevState);
+    setIsLogin((prevState) => !prevState);
   };
 
   const submitFormHandler = async (e) => {
@@ -69,9 +76,10 @@ const AuthForm = () => {
       //   .catch(() => {
 			// toast.error("This email already exist.")
       //   });
-
+      console.log(data.data);
       localStorage.setItem('token', data.data.token)
-      console.log(data.data.token);
+      dispatcher(userAction.login({token: data.data.token}))
+      history.push('/')
     } catch (e) {
       alert(e.response.data.message);
     }

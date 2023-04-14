@@ -44,8 +44,12 @@ class Auth {
 		)
 			next(new AppError(401, "please provide a token."));
 
+			const partsOfToken = req.headers.authorization.split(" ")
+			if (partsOfToken.length < 2) {
+				return next(new AppError(409, "something is wrong badly"))
+			}
 		// get token
-		const token = req.headers.authorization.split(" ")[1];
+		const token = partsOfToken[1];
 
 		if (!token) next(new AppError(401, "please provide a token."));
 

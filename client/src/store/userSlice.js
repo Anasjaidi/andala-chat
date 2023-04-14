@@ -12,10 +12,13 @@ const userSlice = createSlice({
     logout(state) {
       state.loggedIn = false
       state.token = null
+      localStorage.removeItem('token')
     },
     login(state, action) {
-      state.loggedIn = true
+      state.loggedIn = !state.loggedIn
       state.token = action.token
+      console.log("login ....");
+      return state
     }
   }
 })

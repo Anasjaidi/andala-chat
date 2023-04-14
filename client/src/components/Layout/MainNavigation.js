@@ -3,8 +3,13 @@ import { Link } from "react-router-dom";
 import classes from "./MainNavigation.module.css";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { userAction } from "../../store/userSlice";
 
 const MainNavigation = () => {
+
+  const dispatcher = useDispatch()
+  const loggedIn = useSelector((state) => state.user.loggedIn);
   return (
     <header className={classes.header}>
       <Link to="/">
@@ -12,16 +17,14 @@ const MainNavigation = () => {
       </Link>
       <nav>
         <ul>
-          {localStorage.getItem("isLogin") == true ? null : (
-            <li>
+            {!loggedIn && <li>
               <Link to="/auth">Login</Link>
-            </li>
-          )}
-          <li>
+            </li>}
+          { loggedIn && <li>
             <Link to="/profile">Profile</Link>
-          </li>
+          </li>}
           <li>
-            <button
+            {loggedIn && <button
               onClick={() => {
                 toast.success("Loged out successfully.", {
                   style: {
@@ -37,10 +40,11 @@ const MainNavigation = () => {
                 localStorage.setItem("isLogin", false);
                 console.log(localStorage.getItem("isLogin"));
                 window.location.href = "/";
+                dispatcher(userAction.logout())
               }}
             >
               Logout
-            </button>
+            </button>}
           </li>
         </ul>
       </nav>
