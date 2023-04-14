@@ -3,6 +3,7 @@ const prismaUsersClient = require("../classes/prismaUsersClient");
 const jwt = require("jsonwebtoken");
 const AppError = require("../errors/AppError");
 const { promisify } = require("util");
+const { log } = require("console");
 class Auth {
 	constructor() {}
 
@@ -33,21 +34,24 @@ class Auth {
 
 		const token = this.generateToken(user.uid);
 
-		return {token, conversations: user.conversations};
+		return { token, conversations: user.conversations };
 	}
 
 	async protectRoute(req, res, next) {
 		// check if token exists
-		if (
-			!req.headers.authorization ||
-			!req.headers.authorization.startsWith("Bearer")
-		)
+		const auth = req.headers.authorization;
+		
+		if (!auth || !auth.startsWith("Bearer")) {
 			next(new AppError(401, "please provide a token."));
+		}
 
-			const partsOfToken = req.headers.authorization.split(" ")
-			if (partsOfToken.length < 2) {
-				return next(new AppError(409, "something is wrong badly"))
-			}
+		let partsOfToken;
+
+		if (auth) partsOfToken = auth.split(" ");
+
+		if (!partsOfToken || partsOfToken.length < 2) {
+			return next(new AppError(409, "something is wrong badly"));
+		}
 		// get token
 		const token = partsOfToken[1];
 
@@ -62,17 +66,21 @@ class Auth {
 
 		const user = await prismaUsersClient.findUserByUid(decoded.id);
 
-
 		if (!user) next(new AppError(401, "no user associated with this toke."));
 
-		// check if password changed after the token was issued 
+		// check if password changed after the token was issued
 		if (user.passwordChangeAt) {
 			if (parseInt(user.passwordChangeAt.getTime() / 1000, 10) > decoded.iat)
-				next(new AppError(401, "password changes after the token was issued please, re sign in."));
+				next(
+					new AppError(
+						401,
+						"password changes after the token was issued please, re sign in."
+					)
+				);
 		}
 
 		// add user
-		req.user = user
+		req.user = user;
 
 		next();
 	}
