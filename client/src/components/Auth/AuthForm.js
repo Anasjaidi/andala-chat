@@ -1,11 +1,16 @@
 import { useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
 
 import classes from "./AuthForm.module.css";
 import axios from "axios";
 
 const AuthForm = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const isLogin = useSelector((state) => state.user.loggedIn);
+
+
+
+  const dispatcher = useDispatch()
 
   const passwordRef = useRef();
   const emailRef = useRef();
@@ -13,7 +18,7 @@ const AuthForm = () => {
   const lastNameRef = useRef();
 
   const switchAuthModeHandler = () => {
-    setIsLogin((prevState) => !prevState);
+    // setIsLogin((prevState) => !prevState);
   };
 
   const submitFormHandler = async (e) => {
@@ -45,26 +50,28 @@ const AuthForm = () => {
     }
 
     try {
-      const data = await axios
-        .post(endpoint, req)
-        .then(() => {
-          toast.success("Log in successfully.", {
-            style: {
-              border: "3px solid #dbf64d",
-              padding: "10px",
-              color: "black",
-            },
-            iconTheme: {
-              primary: "#dbf64d",
-              secondary: "#FFFAEE",
-            },
-          });
-          localStorage.setItem("isLogin", true);
-          window.location.href = "/";
-        })
-        .catch(() => {
-			toast.error("This email already exist.")
-        });
+      const data = await axios.post(endpoint, req)
+        // .then(() => {
+        //   toast.success("Log in successfully.", {
+        //     style: {
+        //       border: "3px solid #dbf64d",
+        //       padding: "10px",
+        //       color: "black",
+        //     },
+        //     iconTheme: {
+        //       primary: "#dbf64d",
+        //       secondary: "#FFFAEE",
+        //     },
+        //   });
+        //   localStorage.setItem("isLogin", true);
+        //   window.location.href = "/";
+        // })
+      //   .catch(() => {
+			// toast.error("This email already exist.")
+      //   });
+
+      localStorage.setItem('token', data.data.token)
+      console.log(data.data.token);
     } catch (e) {
       alert(e.response.data.message);
     }
