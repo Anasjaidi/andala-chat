@@ -18,31 +18,6 @@ export default function Chat() {
   const [sideBar, setSideBar] = useState(false);
   const [conversationList, setConversationList] = useState([]);
 
-  //array for test all compenent
-
-  const testArray = [
-    {
-      conversationId: 1,
-      conversationName: "First conversation",
-    },
-    {
-      conversationId: 2,
-      conversationName: "Second conversation",
-    },
-    {
-      conversationId: 3,
-      conversationName: "Third conversation",
-    },
-    {
-      conversationId: 4,
-      conversationName: "Fourth conversation",
-    },
-    {
-      conversationId: 5,
-      conversationName: "Fifth conversation",
-    },
-  ];
-
   useEffect(() => {
     const fetchConvs = async () => {
       const token = localStorage.getItem("token");
@@ -55,7 +30,6 @@ export default function Chat() {
           })
           .then((res) => {
 			setConversationList(res.data.data)
-			console.log("list : ", conversationList);
           });
       }
     };
@@ -65,7 +39,6 @@ export default function Chat() {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    console.log(inputValue);
   };
 
   const handleClosingPopup = () => {
@@ -132,7 +105,7 @@ export default function Chat() {
             </div>
             {/* chat */}
             <div className="overflow-y-auto w-full h-4/5 scrollbar-thin scrollbar-thumb-[#dbf64d] scrollbar-track-white scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-              {sideBar ? <SideBar conversationList={conversationList} /> : null}
+              {sideBar ? <SideBar conversationList={conversationList} setConversationList={setConversationList}/> : null}
               <div className="px-2 py-4">
                 <AssistantMessage message={"I'm assistant !"} />
                 <UserMessage

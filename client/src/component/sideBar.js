@@ -23,13 +23,14 @@ export function SideBar(props) {
         return state;
     }
   };
+
   const createNewConversation = async () => {
     return await axios.post(
       "/api/v1/conversation",
-      {title : inputValue},
+      { title: inputValue },
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
@@ -41,8 +42,9 @@ export function SideBar(props) {
 
   const submitConversationForm = () => {
     setInput(false);
-    console.log(inputValue);
-    createNewConversation().then((res) => console.log(res));
+    createNewConversation().then((res) => {
+	  props.setConversationList([...props.conversationList, res.data.data])
+    });
     setInputValue("");
   };
 
@@ -89,6 +91,7 @@ export function SideBar(props) {
               <div className="w-full h-full">
                 <form onSubmit={submitConversationForm}>
                   <input
+				  autoFocus
                     className="w-full border-2 border-black rounded-lg block px-7 py-1.5 text-xs text-gray-800"
                     type="text"
                     value={inputValue}
