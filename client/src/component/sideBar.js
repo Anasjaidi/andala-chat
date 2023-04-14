@@ -8,7 +8,6 @@ export function SideBar(props) {
     conversationId: 0,
   };
 
-  const [selectedId, setSelectedId] = useState(0);
   const [input, setInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -61,14 +60,14 @@ export function SideBar(props) {
             <li key={item.uid}>
               <button
                 onClick={() => {
-                  setSelectedId(item.uid);
+                  props.setSelectedId(item.uid);
                   store.dispatch({
                     type: "SET_CONVERSATION_ID",
                     payload: item.uid,
                   });
                 }}
                 href="#"
-                className="w-full border-2 border-[#dbf64d] rounded-lg block px-7 py-1.5 text-xs text-gray-800 hover:bg-[#dbf64d]/5 "
+                className="w-full border-2 border-[#dbf64d] rounded-lg block px-7 py-1.5 text-xs text-gray-800 hover:bg-[#dbf64d]/20 focus:bg-[#dbf64d]/20"
                 role="menuitem"
               >
                 {item.title}

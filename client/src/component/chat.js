@@ -17,6 +17,8 @@ export default function Chat() {
   const [open, setOpen] = useState(false);
   const [sideBar, setSideBar] = useState(false);
   const [conversationList, setConversationList] = useState([]);
+  const [selectedId, setSelectedId] = useState("");
+  const [messagesList, setMessagesList] = useState([]);
 
   useEffect(() => {
     const fetchConvs = async () => {
@@ -29,12 +31,27 @@ export default function Chat() {
             },
           })
           .then((res) => {
-			setConversationList(res.data.data)
+            setConversationList(res.data.data);
           });
       }
     };
     fetchConvs();
   }, []);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (selectedId != 0) {
+        const messages = await axios.get(`/api/v1/conversation/${selectedId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        // console.log("all messages, ", messages.data.data);
+        setMessagesList(messages.data.data);
+      }
+    };
+    fetchMessages();
+  }, [selectedId]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -105,23 +122,21 @@ export default function Chat() {
             </div>
             {/* chat */}
             <div className="overflow-y-auto w-full h-4/5 scrollbar-thin scrollbar-thumb-[#dbf64d] scrollbar-track-white scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-              {sideBar ? <SideBar conversationList={conversationList} setConversationList={setConversationList}/> : null}
+              {sideBar ? (
+                <SideBar
+                  conversationList={conversationList}
+                  setConversationList={setConversationList}
+                  setSelectedId={setSelectedId}
+                />
+              ) : null}
               <div className="px-2 py-4">
-                <AssistantMessage message={"I'm assistant !"} />
-                <UserMessage
-                  message={"I'm a User who want to ask a question"}
-                />
-                <AssistantMessage message={"I'm assistant !"} />
-                <UserMessage
-                  message={"I'm a User who want to ask a question"}
-                />
-                <AssistantMessage message={"I'm assistant !"} />
-                <UserMessage
-                  message={"I'm a User who want to ask a question !"}
-                />
-                <AssistantMessage message={"Im assistante!"} />
-                <UserMessage message={"im good thanks !"} />
-                <AssistantMessage message={"Im assistante!"} />
+                {messagesList.map((item) =>
+                  item.type === "assistant" ? (
+                    <AssistantMessage message={item.content} />
+                  ) : (
+                    <UserMessage message={item.content} />
+                  )
+                )}
               </div>
             </div>
 
