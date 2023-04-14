@@ -15,9 +15,9 @@ const userSlice = createSlice({
       localStorage.removeItem('token')
     },
     login(state, action) {
-      state.loggedIn = !state.loggedIn
+      state.loggedIn = true
       state.token = action.token
-      console.log("login ....");
+    //   localStorage.setItem('token', state.token);
       return state
     }
   }

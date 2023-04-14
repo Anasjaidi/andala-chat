@@ -20,25 +20,9 @@ const MainNavigation = () => {
             {!loggedIn && <li>
               <Link to="/auth">Login</Link>
             </li>}
-          { loggedIn && <li>
-            <Link to="/profile">Profile</Link>
-          </li>}
           <li>
             {loggedIn && <button
               onClick={() => {
-                toast.success("Loged out successfully.", {
-                  style: {
-                    border: "3px solid #dbf64d",
-                    padding: "10px",
-                    color: "black",
-                  },
-                  iconTheme: {
-                    primary: "#dbf64d",
-                    secondary: "#FFFAEE",
-                  },
-                });
-                localStorage.setItem("isLogin", false);
-                console.log(localStorage.getItem("isLogin"));
                 window.location.href = "/";
                 dispatcher(userAction.logout())
               }}

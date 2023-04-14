@@ -1,20 +1,11 @@
 import { useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useSelector, useDispatch } from "react-redux";
-import { userAction } from "../../store/userSlice";
-
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 import classes from "./AuthForm.module.css";
 import axios from "axios";
 
 const AuthForm = () => {
-  const history = useHistory();
-  const isLogin_ = useSelector((state) => state.user.loggedIn);
-
   const [isLogin, setIsLogin] = useState(true);
-
-  const dispatcher = useDispatch();
 
   const passwordRef = useRef();
   const emailRef = useRef();
@@ -35,6 +26,7 @@ const AuthForm = () => {
 
     if (isLogin) {
       endpoint = "/api/v1/user/signin";
+
       req = {
         email: entredEmailValue,
         password: entredPasswordValue,
@@ -53,14 +45,28 @@ const AuthForm = () => {
     }
 
     try {
-      const data = await axios.post(endpoint, req);
-	  console.log("token is : ", data.data.token)
-      localStorage.setItem("token", data.data.token);
-      dispatcher(userAction.login({ token: data.data.token }));
-      history.push("/");
-    }
-	catch (e) {
-      console.log(e);
+      const data = await axios
+        .post(endpoint, req)
+        .then(() => {
+          toast.success("Log in successfully.", {
+            style: {
+              border: "3px solid #dbf64d",
+              padding: "10px",
+              color: "black",
+            },
+            iconTheme: {
+              primary: "#dbf64d",
+              secondary: "#FFFAEE",
+            },
+          });
+          localStorage.setItem("isLogin", true);
+          window.location.href = "/";
+        })
+        .catch(() => {
+			toast.error("This email already exist.")
+        });
+    } catch (e) {
+      alert(e.response.data.message);
     }
   };
 
