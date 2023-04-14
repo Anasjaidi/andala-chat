@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createStore } from "redux";
-import { IconPlus } from '@tabler/icons-react'
+import { IconPlus } from "@tabler/icons-react";
 import axios from "axios";
 
 export function SideBar(props) {
@@ -11,7 +11,6 @@ export function SideBar(props) {
   const [selectedId, setSelectedId] = useState(0);
   const [input, setInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
-
 
   const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -25,23 +24,20 @@ export function SideBar(props) {
     }
   };
   const createNewConversation = async () => {
-	const conv = await axios.post('/api/v1/conversation', {
-		"title": inputValue,
-	  })
-	console.log(conv);
-	return (conv);
-  }
+    return await axios
+      .post("/api/v1/conversation")
+  };
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
   };
 
   const submitConversationForm = () => {
-	setInput(false);
-	console.log(inputValue)
-	// createNewConversation();
-	setInputValue('');
-  }
+    setInput(false);
+    console.log(inputValue);
+    createNewConversation().then((res) => console.log(res)) 
+    setInputValue("");
+  };
 
   const store = createStore(reducer);
 
@@ -70,29 +66,33 @@ export function SideBar(props) {
               </button>
             </li>
           ))}
-		  <div className="w-full h-10 flex items-center justify-center">
-              {!input && <button
+          <div className="w-full h-10 flex items-center justify-center">
+            {!input && (
+              <button
                 onClick={() => {
-					setInput(!input);
+                  setInput(!input);
                 }}
                 href="#_"
                 className="flex items-center justify-center w-[30px] h-[30px] font-normal bg-[#dbf64d] hover:bg-[#dbf64d]/80 text-gray-800 rounded-full "
               >
                 <IconPlus size={18} />
-              </button>}
-			  {input && <div className="w-full h-full">
-			  <form onSubmit={submitConversationForm}>
-                <input
-                  className="w-full border-2 border-black rounded-lg block px-7 py-1.5 text-xs text-gray-800"
-                  type="text"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  placeholder="New chat"
-				  onSubmit={submitConversationForm}
-                />
-			</form>
-              </div>}
-		</div>
+              </button>
+            )}
+            {input && (
+              <div className="w-full h-full">
+                <form onSubmit={submitConversationForm}>
+                  <input
+                    className="w-full border-2 border-black rounded-lg block px-7 py-1.5 text-xs text-gray-800"
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder="New chat"
+                    onSubmit={submitConversationForm}
+                  />
+                </form>
+              </div>
+            )}
+          </div>
         </ul>
       </div>
     </div>
