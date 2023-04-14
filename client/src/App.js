@@ -10,12 +10,18 @@ import {useEffect} from "react";
 import axios from "axios";
 
 function App() {
-    useEffect(async () => {
-        // const data = await fetch('/api/v1/user/')
 
-        const data = await axios.get('/api/v1/user/')
+	const fetchUser  = async () =>
+	{
+		const data = await axios.get('/api/v1/user/')
 
         console.log(data)
+	}
+
+    useEffect(async () => {
+        // const data = await fetch('/api/v1/user/')
+		fetchUser();
+		
     }, [])
 
   return (
@@ -29,7 +35,7 @@ function App() {
                     <AuthPage />
                 </Route>
                 <Route path='/profile'>
-                    <UserProfile />
+                     <UserProfile />
                 </Route>
             </Switch>
         </Layout>

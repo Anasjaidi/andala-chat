@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 import classes from "./AuthForm.module.css";
 import axios from "axios";
@@ -47,9 +48,23 @@ const AuthForm = () => {
       const data = await axios
         .post(endpoint, req)
         .then(() => {
-			
-		})
-        .catch(() => {});
+          toast.success("Log in successfully.", {
+            style: {
+              border: "3px solid #dbf64d",
+              padding: "10px",
+              color: "black",
+            },
+            iconTheme: {
+              primary: "#dbf64d",
+              secondary: "#FFFAEE",
+            },
+          });
+          localStorage.setItem("isLogin", true);
+          window.location.href = "/";
+        })
+        .catch(() => {
+			toast.error("This email already exist.")
+        });
     } catch (e) {
       alert(e.response.data.message);
     }
@@ -57,6 +72,7 @@ const AuthForm = () => {
 
   return (
     <section className={classes.auth}>
+      <Toaster position="top-right" reverseOrder={false} />
       <h1>{isLogin ? "Login" : "Sign Up"}</h1>
       <form>
         {!isLogin && (
