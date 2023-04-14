@@ -54,7 +54,6 @@ const AuthForm = () => {
 
     try {
       const data = await axios.post(endpoint, req);
-	  console.log("token is : ", data.data.token)
       localStorage.setItem("token", data.data.token);
       dispatcher(userAction.login({ token: data.data.token }));
       history.push("/");

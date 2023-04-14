@@ -31,20 +31,20 @@ export function SideBar(props) {
           role="none"
         >
           {props.conversationList.map((item) => (
-            <li key={item.conversationId}>
+            <li key={item.uid}>
               <button
                 onClick={() => {
-                  setSelectedId(item.conversationId);
+                  setSelectedId(item.uid);
                   store.dispatch({
                     type: "SET_CONVERSATION_ID",
-                    payload: item.conversationId,
+                    payload: item.uid,
                   });
                 }}
                 href="#"
                 className="w-full border-2 border-[#dbf64d] rounded-lg block px-7 py-1.5 text-xs text-gray-800 hover:bg-[#dbf64d]/5 "
                 role="menuitem"
               >
-                {item.conversationName}
+                {item.title}
               </button>
             </li>
           ))}

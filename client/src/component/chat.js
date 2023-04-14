@@ -9,11 +9,14 @@ import {
 import AssistantMessage from "./assistantMessage";
 import UserMessage from "./userMessage";
 import { SideBar } from "./sideBar";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function Chat() {
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
   const [sideBar, setSideBar] = useState(false);
+  const [conversationList, setConversationList] = useState([]);
 
   //array for test all compenent
 
@@ -39,6 +42,26 @@ export default function Chat() {
       conversationName: "Fifth conversation",
     },
   ];
+
+  useEffect(() => {
+    const fetchConvs = async () => {
+      const token = localStorage.getItem("token");
+    //   console.log("from localstorage chat :", token);
+      if (token) {
+        await axios
+          .get("/api/v1/conversation", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+			setConversationList(res.data.data)
+			console.log("list : ", conversationList);
+          });
+      }
+    };
+    fetchConvs();
+  }, []);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -108,13 +131,10 @@ export default function Chat() {
                 </button>
               </div>
             </div>
-				{/* chat */}
+            {/* chat */}
             <div className="overflow-y-auto w-full h-4/5 scrollbar-thin scrollbar-thumb-[#dbf64d] scrollbar-track-white scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-              {sideBar ? <SideBar conversationList={testArray}/> : null}
+              {sideBar ? <SideBar conversationList={conversationList} /> : null}
               <div className="px-2 py-4">
-                {/* {testArray.map((item) => (
-					// if (item.conversationMessags)
-				))} */}
                 <AssistantMessage message={"I'm assistant !"} />
                 <UserMessage
                   message={"I'm a User who want to ask a question"}

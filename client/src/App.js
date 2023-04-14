@@ -1,4 +1,3 @@
-
 import "./App.css";
 import Chat from "./component/chat";
 import { Switch, Route } from "react-router-dom";
@@ -13,50 +12,40 @@ import { Redirect } from "react-router-dom";
 import { userAction } from "./store/userSlice";
 
 function App() {
-	const isLoggedIn = useSelector((state) => state.user.loggedIn);
-	const dispatcher = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.loggedIn);
+  const dispatcher = useDispatch();
 
-	useEffect(() => {
-		const fetchConvs = async () => {
-			if (!isLoggedIn) {
-				const token = localStorage.getItem("token");
-				console.log("from localstorage :", token)
-				if (token) {
-					dispatcher(userAction.login({ token: token }));
-					console.log("reach here " + token);
-					await axios.get("/api/v1/conversation", {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}).then(data => console.log(data));
-				}
-			}
-		};
+  useEffect(() => {
+    const fetchConvs = () => {
+      if (!isLoggedIn) {
+        const token = localStorage.getItem("token");
+        if (token) dispatcher(userAction.login({ token: token }));
+      }
+    };
+    fetchConvs();
+  }, []);
 
-		fetchConvs().then(() => {});
-	}, []);
+  return (
+    <div className="w-screen h-screen bg-black/90">
+      <Layout>
+        <Switch>
+          {isLoggedIn && (
+            <Route path="/" exact>
+              <HomePage />
+            </Route>
+          )}
 
-	return (
-		<div className="w-screen h-screen bg-black/90">
-			<Layout>
-				<Switch>
-					{isLoggedIn && (
-						<Route path="/" exact>
-							<HomePage />
-						</Route>
-					)}
-
-					{!isLoggedIn && (
-						<Route path="/auth">
-							<AuthPage />
-						</Route>
-					)}
-				</Switch>
-				{isLoggedIn && <Chat />}
-			<Redirect to="/auth" />
-			</Layout>
-		</div>
-	);
+          {!isLoggedIn && (
+            <Route path="/auth">
+              <AuthPage />
+            </Route>
+          )}
+        </Switch>
+        {isLoggedIn && <Chat />}
+        <Redirect to="/auth" />
+      </Layout>
+    </div>
+  );
 }
 
 export default App;
